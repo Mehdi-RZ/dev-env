@@ -1,0 +1,26 @@
+# separation of accounts
+[includeIf "gitdir:~/workspace/codes/WORK/"]
+    path = ~/workspace/codes/WORK/.gitconfig
+
+[includeIf "gitdir:~/workspace/codes/PERSO/"]
+    path = ~/workspace/codes/PERSO/.gitconfig
+
+[core]
+  editor = vim
+
+[alias]
+    # List available aliases
+    aliases = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
+    reword = commit --amend
+    # Undo last commit but keep changed files in stage
+    uncommit = reset --soft HEAD~1
+    # Remove file(s) from Git but not from disk
+    untrack = rm --cache --
+    # with staged files without editing the commit message.
+    oops = commit --amend --no-edit
+    # Display tree-like log, because default log is a pain…
+    lg = log --graph --date=relative --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ad)%Creset'
+    # List local commits that were not pushed to remote repository
+    review-local = "!git lg @{push}.."
+[init]
+    defaultBranch = main
