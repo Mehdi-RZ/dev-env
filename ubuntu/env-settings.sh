@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 echo "Configuring OhMyZsh..."
 echo ---------------------------------------------------------
@@ -12,6 +13,7 @@ chsh -s /usr/bin/zsh
 # systemctl --user enable podman.socket
 # systemctl --user start podman.socket
 
+# .zshrc custom configs
 cat <<EOF | tee -a ~/.zshrc
 export PATH=\$PATH:\$HOME/.local/bin
 # if using podman
