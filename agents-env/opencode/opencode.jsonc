@@ -1,0 +1,59 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "external_directory": "ask",
+    "read": {
+      "*": "allow",
+      // dont read .env files and secrets
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow",
+      "*.secrets/**": "deny",
+      "aws-credentials": "deny",
+      "credentials.*": "deny",
+      "secret*": "deny",
+      "secrets/**": "deny",
+      "id_rsa*": "deny",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "config/*.secret.*": "deny",
+      "config/*.private.*": "deny"
+    },
+    "bash": {
+      "*": "ask",
+      "rm": "ask"
+    }
+  },
+  
+  // "plugin": ["./.opencode/plugin/env-protect.js"],
+  // "agent": {
+  //   "brainstomer":{
+  //     "prompt": "" // as a file prompt ?,
+  //     "permission": {
+  //     }
+  // },
+  // read by default
+  // "instructions": ["AGENT.md"],
+
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3-coder:30b": {
+          "name": "qwen3-coder:30b",
+	        "tools": true,
+   	      "reasoning": true
+        },
+        "glm4-code": {
+          "name": "glm4-code",
+	        "tools": true,
+   	      "reasoning": true
+        }
+      }
+    }
+  }
+}
