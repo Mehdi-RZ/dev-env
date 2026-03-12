@@ -1,0 +1,108 @@
+version: '3'
+
+vars:
+  PLATFORM: ubuntu
+  WORK: '{{.WORK | default "false"}}'
+
+tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list
+
+  # === Setup Commands ===
+  setup:desktop:
+    desc: "Complete desktop setup (all tools + GUI apps)"
+    vars:
+      WORK: '{{.WORK | default "false"}}'
+    cmds:
+      - task: install:core
+      - task: install:gui
+      - task: shell:configure
+      - task: dotfiles:deploy
+
+  setup:core:
+    desc: "Core tools only (no GUI apps) - for servers/VMs"
+    vars:
+      WORK: '{{.WORK | default "false"}}'
+    cmds:
+      - task: install:core
+      - task: shell:configure
+      - task: dotfiles:deploy
+
+  # === Installation Tasks ===
+  install:core:
+    desc: "Install core development tools (Docker, k8s, AWS CLI, etc.)"
+    cmds:
+      - bash platform/{{.PLATFORM}}/install-core.sh
+
+  install:gui:
+    desc: "Install GUI applications (VSCode, browsers, etc.)"
+    vars:
+      WORK: '{{.WORK | default "false"}}'
+    cmds:
+      - bash platform/{{.PLATFORM}}/install-gui.sh
+    env:
+      WORK: "{{.WORK}}"
+
+  # === Shell Configuration ===
+  shell:configure:
+    desc: "Configure zsh with oh-my-zsh and plugins"
+    cmds:
+      - bash platform/{{.PLATFORM}}/configure-shell.sh
+
+  # === Dotfiles Management ===
+  dotfiles:deploy:
+    desc: "Copy dotfiles from repo to home directory (prompts for backup)"
+    cmds:
+      - bash platform/{{.PLATFORM}}/dotfiles-deploy.sh
+
+  dotfiles:collect:
+    desc: "Copy dotfiles from home directory back to repo"
+    cmds:
+      - bash platform/{{.PLATFORM}}/dotfiles-collect.sh
+
+  dotfiles:diff:
+    desc: "Show differences between repo and home configs"
+    cmds:
+      - bash platform/{{.PLATFORM}}/dotfiles-diff.sh
+
+  # === Maintenance ===
+  update:all:
+    desc: "Update all tools (APT packages and bonus tools)"
+    cmds:
+      - task: update:apt
+      - task: update:bonus
+
+  update:apt:
+    desc: "Update APT packages"
+    cmds:
+      - sudo apt update && sudo apt upgrade -y
+
+  update:bonus:
+    desc: "Update bonus tools (GUI apps from external sources)"
+    cmds:
+      - bash platform/{{.PLATFORM}}/maintenance-update-bonus.sh
+
+  update:bonus-auto:
+    desc: "Auto-update bonus tools without prompts"
+    cmds:
+      - bash platform/{{.PLATFORM}}/maintenance-update-bonus.sh --auto
+
+  verify:
+    desc: "Show installed tool versions"
+    cmds:
+      - bash platform/{{.PLATFORM}}/maintenance-versions.sh
+
+  clean:
+    desc: "Clean up temporary files and APT cache"
+    cmds:
+      - sudo apt autoremove -y
+      - sudo apt autoclean -y
+      - rm -rf /tmp/bonus-tools-*
+
+  # === Utility Commands ===
+  list-bonus-tools:
+    desc: "List tracked bonus tools"
+    cmds:
+      - bash platform/{{.PLATFORM}}/maintenance-update-bonus.sh --list
