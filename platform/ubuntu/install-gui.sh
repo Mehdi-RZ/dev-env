@@ -52,6 +52,7 @@ declare -A APT_TOOLS_PERSONAL=(
 declare -A APT_TOOLS_WORK=(
     ["microsoft-edge-stable"]="repo|https://packages.microsoft.com/keys/microsoft.asc|https://packages.microsoft.com/repos/edge|stable|microsoft-edge-stable"
     ["intune-portal"]="repo|https://packages.microsoft.com/keys/microsoft.asc|https://packages.microsoft.com/ubuntu/{VERSION}/prod|{CODENAME}|intune-portal"
+    ["slack-desktop"]="repo|https://packagecloud.io/slacktechnologies/slack/gpgkey|https://packagecloud.io/slacktechnologies/slack/debian|jessie|slack-desktop"
 )
 
 # -----------------------------------------------------------------------
